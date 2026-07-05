@@ -1,16 +1,21 @@
 //SECTION: all declared variables.
 
-var intro = document.querySelector(".intro");
-var introtext2 = document.querySelector(".introtext2");
-var introtext1 = document.querySelector(".introtext1");
-var EvidenceBoard = document.querySelector(".EvidenceBoard");
-var night = document.querySelector(".night");
+const intro = document.querySelector(".intro");
+const introtext2 = document.querySelector(".introtext2");
+const introtext1 = document.querySelector(".introtext1");
+const EvidenceBoard = document.querySelector(".EvidenceBoard");
+const night = document.querySelector(".night");
 const dim = document.querySelector(".darksheet");
-var blacksheet = document.querySelector(".blacksheet");
-var exit = document.querySelector(".exit");
- var cord = document.querySelector(".cord");
- var light = document.querySelector(".light");
-var cross = document.querySelector(".cross");
+const blacksheet = document.querySelector(".blacksheet");
+const exit = document.querySelector(".exit");
+ const cord = document.querySelector(".cord");
+ const light = document.querySelector(".light");
+const cross = document.querySelector(".cross");
+const svg = document.querySelector(".svgcanvas");
+ let lightstate="off";
+ let bookopenindex=null;
+ let cardstate="notClicked";
+
 
 
 
@@ -20,27 +25,16 @@ var cross = document.querySelector(".cross");
 
 //SECTION: intro screen.
 
-setTimeout(() => {night.style.display = "block"; }, 8050);
-setTimeout(() => {EvidenceBoard.style.display = "block"; }, 6501);
-setTimeout(() => {cord.style.display = "block"; }, 8001);
+introtext1.addEventListener("animationend", (e) => {
+    if (e.animationName === "IntroFade") {
+        introtext2.style.visibility = "visible";
+        introtext2.classList.add("flicker");
+    }
+})
 
 
-setTimeout(() => {intro.style.display = "none";}, 8000);
 
-setTimeout(() => {introtext2.classList.add("fadeout");
-    introtext1.classList.add("fadeout");
-}, 6000);
-var arr=introtext1.textContent.split("");
-introtext1.textContent="";
-for (let i = 0; i < arr.length; i++) {
- 
-    const span = document.createElement("span");
-span.textContent=arr[i];
-introtext1.appendChild(span);
 
-span.classList.add("flicker");}
-
-   
 
 
 
@@ -49,14 +43,14 @@ span.classList.add("flicker");}
 
 //SECTION: Case data creating and storing.
 
-var CaseDataArr=[]
-var CaseCardDivArr=[]
-var CaseNameArr=["A Scandal in Bohemia", "The Adventure of the Empty House", "The Final Problem", "The Hound of the Baskervilles", "The Red Headed League", "The Sign of the Four", "The Adventure of the Six Napoleons", "The Adventure of the Speckled Band", "A Study in Scarlet", "The Valley of Fear"]
-var CaseClassArr=["A_Scandal_in_Bohemia", "The_Adventure_of_the_Empty_House", "The_Final_Problem", "The_Hound_of_the_Baskervilles", "The_Red_Headed_League", "The_Sign_of_the_Four", "The_Adventure_of_the_Six_Napoleons", "The_Adventure_of_the_Speckled_Band", "A_Study_in_Scarlet", "The_Valley_of_Fear"]
-var CaseImageArr=["assets/covers/A_Scandal_in_Bohemia.jpg", "assets/covers/Empty_House.jpg", "assets/covers/final_problem.jpg", "assets/covers/Hound_of_Baskervilles.jpg", "assets/covers/red_headed_league.jpg", "assets/covers/Sign_of_four.jpg", "assets/covers/Six_Napoleons.jpg", "assets/covers/Speckled_Band.jpg", "assets/covers/Study_in_Scarlet.jpg", "assets/covers/The_Valley_of_Fear.jpg"]
-var PushpinClassArr=["pushpin1", "pushpin2", "pushpin3", "pushpin4", "pushpin5", "pushpin6", "pushpin7", "pushpin8", "pushpin9", "pushpin10", "pushpin11"]
-var CaseStoryTextArr=["A_Scandal_in_Bohemia_text", "The_Adventure_of_the_Empty_House_text", "The_Final_Problem_text", "The_Hound_of_the_Baskervilles_text", "The_Red_Headed_League_text", "The_Sign_of_the_Four_text", "The_Adventure_of_the_Six_Napoleons_text", "The_Adventure_of_the_Speckled_Band_text", "A_Study_in_Scarlet_text", "The_Valley_of_Fear_text"]
-var CaseStoryPathArr=["/assets/stories/scandalinbohemia.txt", "/assets/stories/emptyhouse.txt", "/assets/stories/finalproblem.txt", "/assets/stories/houndofbaskervilles.txt", "/assets/stories/red-headedleague.txt", "/assets/stories/signoffour.txt", "/assets/stories/sixnapoleans.txt", "/assets/stories/speckledband.txt", "/assets/stories/studyinscarlet.txt", "/assets/stories/valleyoffear.txt"]
+const CaseDataArr=[]
+const CaseCardDivArr=[]
+const CaseNameArr=["A Scandal in Bohemia", "The Adventure of the Empty House", "The Final Problem", "The Hound of the Baskervilles", "The Red Headed League", "The Sign of the Four", "The Adventure of the Six Napoleons", "The Adventure of the Speckled Band", "A Study in Scarlet", "The Valley of Fear"]
+const CaseClassArr=["A_Scandal_in_Bohemia", "The_Adventure_of_the_Empty_House", "The_Final_Problem", "The_Hound_of_the_Baskervilles", "The_Red_Headed_League", "The_Sign_of_the_Four", "The_Adventure_of_the_Six_Napoleons", "The_Adventure_of_the_Speckled_Band", "A_Study_in_Scarlet", "The_Valley_of_Fear"]
+const CaseImageArr=["assets/covers/A_Scandal_in_Bohemia.jpg", "assets/covers/Empty_House.jpg", "assets/covers/final_problem.jpg", "assets/covers/Hound_of_Baskervilles.jpg", "assets/covers/red_headed_league.jpg", "assets/covers/Sign_of_four.jpg", "assets/covers/Six_Napoleons.jpg", "assets/covers/Speckled_Band.jpg", "assets/covers/Study_in_Scarlet.jpg", "assets/covers/The_Valley_of_Fear.jpg"]
+const PushpinClassArr=["pushpin1", "pushpin2", "pushpin3", "pushpin4", "pushpin5", "pushpin6", "pushpin7", "pushpin8", "pushpin9", "pushpin10", "pushpin11"]
+const CaseStoryTextArr=Array.from({length:CaseNameArr.length}, ()=>[])
+const CaseStoryPathArr=["/assets/stories/scandalinbohemia.txt", "/assets/stories/emptyhouse.txt", "/assets/stories/finalproblem.txt", "/assets/stories/houndofbaskervilles.txt", "/assets/stories/red-headedleague.txt", "/assets/stories/signoffour.txt", "/assets/stories/sixnapoleans.txt", "/assets/stories/speckledband.txt", "/assets/stories/studyinscarlet.txt", "/assets/stories/valleyoffear.txt"]
 for (let i = 0; i <10; i++) { 
     let Div= document.createElement("div")
 
@@ -88,7 +82,6 @@ let backcover= document.createElement("img");
 backcover.src="/assets/covers/backcover.png";
 backcover.style.width=window.innerWidth*0.5 + 'px';
 backcover.style.height=window.innerHeight + 'px';
-CaseStoryTextArr[i]=[];
 let CaseData= {
     "NAME": CaseNameArr[i],
     "IMAGE": CaseImageArr[i],
@@ -111,10 +104,9 @@ CaseDataArr.push(CaseData)
 
 
 
-
 //SECTION: Drawing threads between pushpins.
 
-const svg = document.querySelector(".svgcanvas");
+
 const patharr = [];
 for (let i = 0; i < CaseDataArr.length; i++) {
 let path= document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -173,51 +165,83 @@ if (points.length >= 10) {
 
 
 
-let cardclicked=0;
+//SECTION: forEach loop on CaseDataArr.
+ 
 
-CaseDataArr.forEach((card) => {
-    card.DIV.addEventListener("click", () => {
-    if (cardclicked===0) {
-   const rect = card.DIV.getBoundingClientRect();
-    card.DIV.style.top = `${rect.top}px`;
-    card.DIV.style.left = `${rect.left}px`;
-    card.DIV.style.right = "auto";
-    card.DIV.style.position = "fixed";
-    document.body.appendChild(card.DIV);
-    card.DIV.classList.add("cardclicked");
 
-    dim.style.display = "block"; cardclicked=1;}
-  
-});
-   
-    });
+CaseDataArr.forEach((card, index) => {
 
-CaseDataArr.forEach((card) => {
-    card.DIV.addEventListener("mouseover", () => {
-        if (cardclicked ===2) {
+//ANCHOR - Clicking the card.
+
+card.DIV.addEventListener("click", () => {
+if (cardstate==="notClicked") {
+const rect = card.DIV.getBoundingClientRect();
+card.DIV.style.top = `${rect.top}px`;
+card.DIV.style.left = `${rect.left}px`;
+card.DIV.style.right = "auto";
+card.DIV.style.position = "fixed";
+document.body.appendChild(card.DIV);
+card.DIV.classList.add("cardclicked");
+dim.style.display = "block"; cardstate="animating";}});
+
+
+
+
+//ANCHOR - hovering the card when its scaled.
+
+card.DIV.addEventListener("mouseover", () => {
+        if (cardstate ==="clicked") {
             card.DIV.classList.add("scaledhover");
-            card.DIV.style.cursor = "pointer";
-        } 
-    });
-    card.DIV.addEventListener("mouseleave", () => {
-        if (cardclicked ===2) {
-            card.DIV.classList.remove("scaledhover");
-        }
-    });});
-    CaseDataArr.forEach((card) => {
-        card.DIV.addEventListener("mouseover", () => {
-        if (cardclicked === 1) {
-            card.DIV.style.cursor = "none";
-        }
-    });});
+            card.DIV.style.cursor = "pointer";}});
+card.DIV.addEventListener("mouseleave", () => {
+        if (cardstate ==="clicked") {
+            card.DIV.classList.remove("scaledhover");}});
 
 
 
 
+//ANCHOR - hovering the card when its animating.
 
+card.DIV.addEventListener("mouseover", () => {
+    if (cardstate ==="animating") {
+            card.DIV.style.cursor = "none";}});
+
+
+
+
+//ANCHOR - setting the cardstate=clicked after animating.
+
+ card.DIV.addEventListener("animationend", (e) => {
+    if (e.animationName === "click") {cardstate="clicked";}})
+
+
+
+
+//ANCHOR - clicking card when its fully scaled.
+
+card.DIV.addEventListener("click", () => {
+    if (cardstate === "clicked") {
+        
+        EvidenceBoard.appendChild(card.DIV);
+        blacksheet.style.display = "block";
+        
+        EvidenceBoard.style.display = "none";
+        cord.style.display = "none";
+        light.style.display = "none";
+        bookopenindex=index;
+    dim.style.display = "none";}})
+
+
+});
+
+
+    
+
+
+//SECTION - clicking the dim to close the card.
 
     dim.addEventListener("click", () => {
-    if (cardclicked === 2) {
+    if (cardstate ==="clicked") {
 CaseDataArr.forEach((card) => {
         card.DIV.classList.remove("cardclicked");
          card.DIV.style.position = "absolute";
@@ -227,10 +251,7 @@ CaseDataArr.forEach((card) => {
          card.DIV.style.right = "";
         dim.style.display = "none";
         
-        cardclicked=0;
-})
-    }
-});
+        cardstate="notClicked";})}});
 
 
 
@@ -318,73 +339,37 @@ pageflip.loadFromHTML(card.BOOK.querySelectorAll(".page, .cpage"))
 
 
 
+//SECTION: book opening functionality.
 
-
-
-
-
-
-CaseDataArr.forEach((card) => {
-    card.DIV.addEventListener("animationend", (e) => {
-        if (e.animationName === "click") {cardclicked=2;
-            
-}})})
-
-
-
-
-
-
-
-
-
-
-let bookopenindex="";
-
-
-CaseDataArr.forEach((card, index) => {
-card.DIV.addEventListener("click", () => {
-    if (cardclicked === 2) {
-        
-        EvidenceBoard.appendChild(card.DIV);
-        blacksheet.style.display = "block";
-        
-        EvidenceBoard.style.display = "none";
-        cord.style.display = "none";
-        light.style.display = "none";
-        bookopenindex=index;
-    dim.style.display = "none";
-    }})});
 
 blacksheet.addEventListener("animationend", (e) => {if(e.animationName === "fadeinblack") {
     CaseDataArr[bookopenindex].BOOK.style.top = "0";
  blacksheet.style.opacity="0"; exit.style.display="block"; CaseDataArr[bookopenindex].BOOK.style.animation="fadeinblack 1s ease forwards"; }})
 
+
+
+
+ //SECTION: light cord functionality.
    
-    let button=0;
 
-
-
-   
 cord.addEventListener("click", () => {
-    cord.classList.add("cordpulled");})
-    cord.addEventListener("animationend", (e) => {
-        if (e.animationName === "pullcord") {
-            cord.classList.remove("cordpulled");
-        }
-    })
-cord.addEventListener("click", () => {
-    if (button===1) {
+    cord.classList.add("cordpulled");
+if (lightstate==="on") {
         night.style.display = "block";
         light.classList.add("lightflickeroff");
-        button=0;
+        lightstate="off";
     }
     else {
         night.style.display = "none";
         light.style.display = "block";
         light.classList.add("lightflickeron");
-        button=1;
+        lightstate="on";
     }})
+    cord.addEventListener("animationend", (e) => {
+        if (e.animationName === "pullcord") {
+            cord.classList.remove("cordpulled");
+        }  
+    })
 
 light.addEventListener("animationend", (e) => {
     if (e.animationName === "lightflickeroff") {
@@ -393,10 +378,16 @@ light.addEventListener("animationend", (e) => {
     }
     else if (e.animationName === "lightflickeron") {
         light.classList.remove("lightflickeron");
+        night.style.display = "none";
     }})
 
     
-    cross.addEventListener("mouseover", () => {
+
+
+//SECTION: cross functionality
+
+
+cross.addEventListener("mouseover", () => {
         cross.classList.add("crosshover");
         document.querySelector(".circle").classList.add("circlehover");
     });
@@ -418,8 +409,8 @@ light.addEventListener("animationend", (e) => {
       CaseDataArr[bookopenindex].DIV.style.left = "";
       CaseDataArr[bookopenindex].DIV.style.right = "";
       dim.style.display = "none";
-       cardclicked=0;
-       bookopenindex="";
+       cardstate="notClicked";
+       bookopenindex=null;
        
     })
     
