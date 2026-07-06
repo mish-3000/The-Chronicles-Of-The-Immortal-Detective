@@ -20,9 +20,6 @@ const svg = document.querySelector(".svgcanvas");
 
 
 
-
-
-
 //SECTION: intro screen.
 
 introtext1.addEventListener("animationend", (e) => {
@@ -31,12 +28,6 @@ introtext1.addEventListener("animationend", (e) => {
         introtext2.classList.add("flicker");
     }
 })
-
-
-
-
-
-
 
 
 
@@ -69,7 +60,7 @@ Div.appendChild(image)
 let pushpin= document.createElement("img")
 pushpin.classList.add("pushpin")
 pushpin.classList.add(PushpinClassArr[i])
-pushpin.setAttribute("src", "https://freepngimg.com/save/webp/25041-pushpin-free-download")
+pushpin.setAttribute("src", "/assets/misc/pushpin.webp")
 EvidenceBoard.appendChild(pushpin)
 let book= document.createElement("div")
 book.classList.add("book")
@@ -94,6 +85,7 @@ let CaseData= {
     "BACKCOVER": backcover,
     "STORYTEXT": CaseStoryTextArr[i],
     "STORYPATH": CaseStoryPathArr[i],
+    "PAGEFLIP": null
 } 
 CaseDataArr.push(CaseData)
 }
@@ -235,7 +227,6 @@ card.DIV.addEventListener("click", () => {
 });
 
 
-    
 
 
 //SECTION - clicking the dim to close the card.
@@ -257,15 +248,25 @@ CaseDataArr.forEach((card) => {
 
 
 
-
-
  
 //SECTION: book creation and pageflip initialization.
 
-CaseDataArr.forEach((card) => {
-    fetch(card.STORYPATH)
-    .then(response => response.text())
-    .then(data => {card.STORYTEXT=(data.split(" "));
+
+
+
+async function bookCreate() {
+ for (const card of CaseDataArr) {
+    try {const promise= await fetch(card.STORYPATH);
+        if (!promise.ok) {throw new Error(`HTTP error! status: ${promise.status}`);}
+    const response= await promise.text();
+    card.STORYTEXT=(response.split(" "));
+     addPages(card);
+     initializePageFlip(card);}
+     catch (error) {console.error(`Error fetching story for ${card.NAME}:`, error);
+    }}}
+     
+const addPages = (card) => {
+    card.BOOK.innerHTML = "";
     let length=0;
     let pagestart=0;
     card.STORYTEXT.forEach((word, index) => {length+=word.length;
@@ -277,7 +278,6 @@ if (length>=1655) {
     card.BOOK.appendChild(page);
     length=0;
     pagestart=index;}})
-
 if (pagestart < card.STORYTEXT.length) {
     let page = document.createElement("div");
     page.classList.add("page");
@@ -304,7 +304,7 @@ if (allpages.length % 2 === 0) {
     let backblankpage = document.createElement("div");
     backblankpage.classList.add("cpage");
     backblankpage.dataset.density = "hard";
-    card.BOOK.insertBefore(backblankpage, card.BOOK.children.lastChild);
+    card.BOOK.insertBefore(backblankpage, card.BOOK.lastChild);
 }
 else {
     let frontblankpage = document.createElement("div");
@@ -320,23 +320,19 @@ else {
     backblankpage.dataset.density = "hard";
     card.BOOK.insertBefore(backblankpage, card.BOOK.children[card.BOOK.children.length-1]);
 
-}
-const pageflip = new St.PageFlip(card.BOOK, {
+}}
+
+
+const initializePageFlip = (card) => {card.PAGEFLIP = new St.PageFlip(card.BOOK, {
     showCover: true,
     width: window.innerWidth*0.5,
 height: window.innerHeight, 
 size: "stretch",
 minHeight: window.innerHeight,
 });
-pageflip.loadFromHTML(card.BOOK.querySelectorAll(".page, .cpage"))
-});
+card.PAGEFLIP.loadFromHTML(card.BOOK.querySelectorAll(".page, .cpage"))}
 
-});
-
-
-
-
-
+bookCreate();
 
 
 //SECTION: book opening functionality.

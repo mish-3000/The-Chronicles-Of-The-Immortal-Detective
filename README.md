@@ -4,4 +4,4 @@ A Sherlock Holmes reading experience reimagined as a detective's evidence board.
 
 Built from scratch with HTML, CSS, and JavaScript.
 
-— Mishty
+

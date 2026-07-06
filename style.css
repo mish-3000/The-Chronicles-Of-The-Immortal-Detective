@@ -8,6 +8,14 @@
   ::-webkit-scrollbar {
     display: none;
 }
+@font-face {
+  font-family: 'victorian';
+  src: url('/assets/misc/Victorian\ Parlor\ Vintage\ Alternate_free.woff2') format('woff2'),
+       url('/assets/misc/Victorian\ Parlor\ Vintage\ Alternate_free.woff2') format('woff'); 
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
   body{
     background-color: #000000;
     margin: 0;
@@ -18,17 +26,12 @@
     background-size: cover;
    background-attachment: fixed;
     position: relative;
-
-    }
-  
-    
-
-
+}
 
   .intro{
-    display: flex;
+    display: none;
     flex-direction: column;
-    align-items: center;
+    align-items: center; 
     justify-content: center;
     background-color: #000000;
     height: 100vh;
@@ -36,25 +39,31 @@
     padding: 0;
 }
 
-.introtext1{
-    font-size: 3.2rem;
-    padding-bottom: 8px;   
-}
-
-
 .introtext2{
-    font-size: 1.28rem; animation: fade 2.3s linear 2s 1 forwards;  opacity: 0; animation-fill-mode: forwards;
+    font-size: 4.6rem;
+    visibility: hidden; 
 }
 
-.introtext{ 
-   
-font-family: "Cinzel", serif;
+
+.introtext1{
+    font-size: 2.2rem; 
+    animation: IntroFade 2.5s linear 1 forwards;
+}
+
+
+.introtext{  
+font-family: "victorian";
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
    color: #6c0505;
-   white-space: nowrap; 
+   white-space: nowrap
 }   
+
+@keyframes IntroFade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
 
 @keyframes flicker {
 0% { 
@@ -62,7 +71,7 @@ font-family: "Cinzel", serif;
     filter: blur(20px); 
   }
   4% { 
-    opacity: 0.55;       
+    opacity: 0.85;       
     filter: blur(18px); 
   }
   8% { 
@@ -98,39 +107,22 @@ font-family: "Cinzel", serif;
     opacity: 0.15; 
     filter: blur(7px); 
   }
-  82% { 
+  80% { 
     opacity: 0.95; 
     filter: blur(4px); 
   }
   85% { 
-    opacity: 0;       
+    opacity: 1;       
   }
 
   86% { 
-    opacity: 1; 
-    filter: blur(0px);  
+    opacity: 1;  
   }
   100% { 
     opacity: 1; 
-    filter: blur(0px);
+  
   }
 }
-
-
-
-@keyframes fade {
-  0% {
-    opacity: 0;
-    transform: translateY(17px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-
 
 
 @keyframes fadeout {
@@ -178,7 +170,7 @@ font-family: "Cinzel", serif;
   
 }
 
-.EvidenceBoard{display: none; height: 100vh; width: 100vw; animation: fadeout 2s linear 1s 1 reverse ; overflow: auto; position: fixed;}
+.EvidenceBoard{display: block; height: 100vh; width: 100vw; animation: fadeout 2s linear 1s 1 reverse ; overflow: auto; position: fixed;}
 .A_Scandal_in_Bohemia{transform-origin: 96% 5%;
     transform: rotate(-15deg);
     top: 14.3vh;
