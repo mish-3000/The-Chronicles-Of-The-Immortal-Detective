@@ -1,8 +1,7 @@
 //SECTION: all declared variables.
 
 const intro = document.querySelector(".intro");
-const introtext2 = document.querySelector(".introtext2");
-const introtext1 = document.querySelector(".introtext1");
+const introtext = document.querySelectorAll(".introtext");
 const EvidenceBoard = document.querySelector(".EvidenceBoard");
 const night = document.querySelector(".night");
 const dim = document.querySelector(".darksheet");
@@ -22,14 +21,19 @@ const svg = document.querySelector(".svgcanvas");
 
 //SECTION: intro screen.
 
-introtext1.addEventListener("animationend", (e) => {
+introtext[0].addEventListener("animationend", (e) => {
     if (e.animationName === "IntroFade") {
-        introtext2.style.visibility = "visible";
-        introtext2.classList.add("flicker");
-    }
+        introtext[1].style.visibility = "visible";
+        introtext[1].classList.add("flicker");
+    }})
+introtext[1].addEventListener("animationend", (e) => {
+    if (e.animationName === "flicker") {introtext[0].classList.add("introtextfadeout"); introtext[1].classList.add("introtextfadeout");}
 })
+introtext[1].addEventListener("animationend", (e) => {if (e.animationName === "introtextfadeout") {intro.classList.add("introfadeout"); EvidenceBoard.style.visibility = "visible"; }})
+intro.addEventListener("animationend", (e) => {
+    if (e.animationName === "introfadeout") {intro.style.display = "none";  cord.style.display = "block"; night.style.display = "block";}})
 
-
+ 
 
 
 //SECTION: Case data creating and storing.
@@ -100,7 +104,7 @@ CaseDataArr.push(CaseData)
 
 
 const patharr = [];
-for (let i = 0; i < CaseDataArr.length; i++) {
+for (let i = 0; i < 9; i++) {
 let path= document.createElementNS("http://www.w3.org/2000/svg", "path");
 
 path.setAttribute("stroke", "rgb(128, 0, 0,1)");
@@ -130,25 +134,18 @@ if (points.length >= 10) {
      `M${points[4].x+20} ${points[4].y+50} Q${(points[4].x + points[3].x) / 2} ${ (points[4].y + points[3].y) / 2 + 50} ${points[3].x+40} ${points[3].y+40}`,
      `M${points[2].x+45} ${points[2].y+40} Q${(points[2].x + points[4].x) / 2} ${ (points[2].y + points[4].y) / 2 + 50} ${points[4].x+20} ${points[4].y+40}`
 ]
- for (let i = 0; i < patharr.length; i++) {
+patharr.forEach((path, index) => {
+    path.setAttribute("d", pathdata[index]);
+    path.setAttribute("stroke-dasharray", path.getTotalLength());
+path.setAttribute("stroke-dashoffset", path.getTotalLength());
+})
+}
 
-    patharr[i].setAttribute("d", pathdata[i]);
-    }}}
-    
-    setTimeout(() => { drawThreads();
-        setTimeout(() => { patharr.forEach((path) => {
-            path.classList.remove("draw");
-            path.style.strokeDasharray = "";
-            path.style.strokeDashoffset = "";
-        }); }, 2800);
-    }, 8000);
-    
-    for (let i = 0; i < patharr.length; i++) { 
-        setTimeout(() => {     patharr[i].style.strokeDasharray = patharr[i].getTotalLength();
-    patharr[i].style.strokeDashoffset = patharr[i].getTotalLength();}, 8000);
-        setTimeout(() => { patharr[i].classList.add("draw");
-        }, 9000);
-    }
+}
+
+    intro.addEventListener("animationend", (e) => {if (e.animationName === "introfadeout") { drawThreads(); patharr.forEach((path) => {path.classList.add("draw"); })}
+})
+patharr.forEach((path) => {path.addEventListener("animationend", (e) => {if (e.animationName === "draw") {path.classList.remove("draw"); path.style.strokeDasharray = "0"; path.style.strokeDashoffset = "0";}})})
 
    EvidenceBoard.addEventListener("scroll", drawThreads);
 
@@ -236,13 +233,13 @@ card.DIV.addEventListener("click", () => {
 CaseDataArr.forEach((card) => {
         card.DIV.classList.remove("cardclicked");
          card.DIV.style.position = "absolute";
-         document.body.appendChild(card.DIV);
+         EvidenceBoard.appendChild(card.DIV);
          card.DIV.style.top = "";
          card.DIV.style.left = "";
          card.DIV.style.right = "";
         dim.style.display = "none";
         
-        cardstate="notClicked";})}});
+        cardstate="notClicked";})}})
 
 
 
@@ -405,8 +402,5 @@ cross.addEventListener("mouseover", () => {
       CaseDataArr[bookopenindex].DIV.style.left = "";
       CaseDataArr[bookopenindex].DIV.style.right = "";
       dim.style.display = "none";
-       cardstate="notClicked";
-       bookopenindex=null;
+       cardstate="notClicked";})
        
-    })
-    
