@@ -9,11 +9,13 @@ const blacksheet = document.querySelector(".blacksheet");
 const exit = document.querySelector(".exit");
  const cord = document.querySelector(".cord");
  const light = document.querySelector(".light");
-const cross = document.querySelector(".cross");
 const svg = document.querySelector(".svgcanvas");
  let lightstate="off";
  let bookopenindex=null;
  let cardstate="notClicked";
+ const ribbon = document.querySelector(".ribbon");
+ const pin = document.querySelector(".pin");
+ let bookopened=false;
 
 
 
@@ -64,7 +66,7 @@ Div.appendChild(image)
 let pushpin= document.createElement("img")
 pushpin.classList.add("pushpin")
 pushpin.classList.add(PushpinClassArr[i])
-pushpin.setAttribute("src", "/assets/misc/pushpin.webp")
+pushpin.setAttribute("src", "/assets/misc/pushpin.png")
 EvidenceBoard.appendChild(pushpin)
 let book= document.createElement("div")
 book.classList.add("book")
@@ -77,6 +79,7 @@ let backcover= document.createElement("img");
 backcover.src="/assets/covers/backcover.png";
 backcover.style.width=window.innerWidth*0.5 + 'px';
 backcover.style.height=window.innerHeight + 'px';
+let pageno=null;
 let CaseData= {
     "NAME": CaseNameArr[i],
     "IMAGE": CaseImageArr[i],
@@ -89,7 +92,8 @@ let CaseData= {
     "BACKCOVER": backcover,
     "STORYTEXT": CaseStoryTextArr[i],
     "STORYPATH": CaseStoryPathArr[i],
-    "PAGEFLIP": null
+    "PAGEFLIP": null,
+    "BOOKMARK": pageno
 } 
 CaseDataArr.push(CaseData)
 }
@@ -116,24 +120,31 @@ svg.appendChild(path);
 
 const drawThreads = () => {
 const points = [];
+const pincentre=[];
 CaseDataArr.forEach((caseData) => {
-    let pinx = caseData.PUSHPIN.getBoundingClientRect().x;
-    let piny = caseData.PUSHPIN.getBoundingClientRect().y;
-points.push({x: pinx, y: piny});
-
+    let coordinates=caseData.PUSHPIN.getBoundingClientRect();
+points.push(coordinates); 
+})
+points.forEach((point) => {
+    let x = point.left + point.width*0.7;
+    let y = point.top + point.height*0.7;
+    pincentre.push({ m:x, n:y });
 });
 if (points.length >= 10) {
     
-    const pathdata = [`M${points[0].x+30} ${points[0].y+30} Q${(points[0].x + points[1].x) / 2} ${ (points[0].y + points[1].y) / 2 + 70} ${points[1].x+40} ${points[1].y+45}`,
-     `M${points[0].x+30} ${points[0].y+30} Q${(points[0].x + points[5].x) / 2} ${ (points[0].y + points[5].y) / 2 + 50} ${points[5].x+40} ${points[5].y+40}`,
-   `M${points[0].x+20} ${points[0].y+20} Q${(points[0].x + points[8].x) / 2+70} ${ (points[0].y + points[8].y) / 2 + 70} ${points[8].x+40} ${points[8].y+35}`,
-     `M${points[3].x+20} ${points[3].y+20} Q${(points[3].x + points[7].x) / 2+70} ${ (points[3].y + points[7].y) / 2 + 50} ${points[7].x+37} ${points[7].y+35}`,
-     `M${points[6].x+43} ${points[6].y+40} Q${(points[6].x + points[3].x) / 2} ${ (points[6].y + points[3].y) / 2 + 50} ${points[3].x+18} ${points[3].y+40}`,
-     `M${points[6].x+20} ${points[6].y+20} Q${(points[6].x + points[1].x) / 2} ${ (points[6].y + points[1].y) / 2 + 50} ${points[1].x+40} ${points[1].y+40}`,
-   `M${points[7].x+20} ${points[7].y+50} Q${(points[7].x + points[9].x) / 2} ${ (points[7].y + points[9].y) / 2 + 50} ${points[9].x+30} ${points[9].y+40}`,
-     `M${points[4].x+20} ${points[4].y+50} Q${(points[4].x + points[3].x) / 2} ${ (points[4].y + points[3].y) / 2 + 50} ${points[3].x+40} ${points[3].y+40}`,
-     `M${points[2].x+45} ${points[2].y+40} Q${(points[2].x + points[4].x) / 2} ${ (points[2].y + points[4].y) / 2 + 50} ${points[4].x+20} ${points[4].y+40}`
-]
+    const pathdata =  [`M${pincentre[0].m} ${pincentre[0].n} Q${(points[0].x + points[1].x) / 2} ${ (points[0].y + points[1].y) / 2 + 70} ${pincentre[1].m} ${pincentre[1].n}`,
+     `M${pincentre[0].m} ${pincentre[0].n} Q${(points[0].x + points[5].x) / 2} ${ (points[0].y + points[5].y) / 2 + 50} ${pincentre[5].m} ${pincentre[5].n}`,
+   `M${pincentre[0].m} ${pincentre[0].n} Q${(points[0].x + points[8].x) / 2+70} ${ (points[0].y + points[8].y) / 2 + 70} ${pincentre[8].m} ${pincentre[8].n}`,
+     `M${pincentre[3].m} ${pincentre[3].n} Q${(points[3].x + points[7].x) / 2+70} ${ (points[3].y + points[7].y) / 2 + 50} ${pincentre[7].m} ${pincentre[7].n}`,
+     `M${pincentre[6].m} ${pincentre[6].n} Q${(points[6].x + points[3].x) / 2} ${ (points[6].y + points[3].y) / 2 + 50} ${pincentre[3].m} ${pincentre[3].n}`,
+     `M${pincentre[6].m} ${pincentre[6].n} Q${(points[6].x + points[1].x) / 2} ${ (points[6].y + points[1].y) / 2 + 50} ${pincentre[1].m} ${pincentre[1].n}`,
+   `M${pincentre[7].m} ${pincentre[7].n} Q${(points[7].x + points[9].x) / 2} ${ (points[7].y + points[9].y) / 2 + 50} ${pincentre[9].m} ${pincentre[9].n}`,
+     `M${pincentre[4].m} ${pincentre[4].n} Q${(points[4].x + points[3].x) / 2} ${ (points[4].y + points[3].y) / 2 + 50} ${pincentre[3].m} ${pincentre[3].n}`,
+     `M${pincentre[2].m} ${pincentre[2].n} Q${(points[2].x + points[4].x) / 2} ${ (points[2].y + points[4].y) / 2 + 50} ${pincentre[4].m} ${pincentre[4].n}` ]
+
+
+
+
 patharr.forEach((path, index) => {
     path.setAttribute("d", pathdata[index]);
     path.setAttribute("stroke-dasharray", path.getTotalLength());
@@ -143,11 +154,12 @@ path.setAttribute("stroke-dashoffset", path.getTotalLength());
 
 }
 
-    intro.addEventListener("animationend", (e) => {if (e.animationName === "introfadeout") { drawThreads(); patharr.forEach((path) => {path.classList.add("draw"); })}
-})
+    intro.addEventListener("animationend", (e) => {if (e.animationName === "introfadeout") { drawThreads(); setTimeout(() => {patharr.forEach((path) => {path.classList.add("draw"); })}, 500); }})
+
 patharr.forEach((path) => {path.addEventListener("animationend", (e) => {if (e.animationName === "draw") {path.classList.remove("draw"); path.style.strokeDasharray = "0"; path.style.strokeDashoffset = "0";}})})
 
    EvidenceBoard.addEventListener("scroll", drawThreads);
+   EvidenceBoard.addEventListener("resize", drawThreads);
 
 
 
@@ -221,8 +233,8 @@ card.DIV.addEventListener("click", () => {
     dim.style.display = "none";}})
 
 
-});
 
+})
 
 
 
@@ -327,7 +339,12 @@ height: window.innerHeight,
 size: "stretch",
 minHeight: window.innerHeight,
 });
-card.PAGEFLIP.loadFromHTML(card.BOOK.querySelectorAll(".page, .cpage"))}
+card.PAGEFLIP.loadFromHTML(card.BOOK.querySelectorAll(".page, .cpage"))
+card.PAGEFLIP.on("flip", (e) => {
+    card.BOOKMARK = e.data;
+if (card.BOOKMARK=== 1) {ribbon.style.display = "block";pin.style.display = "block";} 
+else if (card.BOOKMARK === 0) {ribbon.style.display = "none";}});
+}
 
 bookCreate();
 
@@ -337,7 +354,7 @@ bookCreate();
 
 blacksheet.addEventListener("animationend", (e) => {if(e.animationName === "fadeinblack") {
     CaseDataArr[bookopenindex].BOOK.style.top = "0";
- blacksheet.style.opacity="0"; exit.style.display="block"; CaseDataArr[bookopenindex].BOOK.style.animation="fadeinblack 1s ease forwards"; }})
+ blacksheet.style.opacity="0"; CaseDataArr[bookopenindex].BOOK.style.animation="fadeinblack 1s ease forwards"; bookopened=true; }})
 
 
 
@@ -377,30 +394,5 @@ light.addEventListener("animationend", (e) => {
     
 
 
-//SECTION: cross functionality
+//SECTION - bookmark functionality.
 
-
-cross.addEventListener("mouseover", () => {
-        cross.classList.add("crosshover");
-        document.querySelector(".circle").classList.add("circlehover");
-    });
-    cross.addEventListener("mouseout", () => {
-        cross.classList.remove("crosshover");
-        document.querySelector(".circle").classList.remove("circlehover");
-    });
-   cross.addEventListener("click", () => {
-        exit.style.display = "none";
-        CaseDataArr[bookopenindex].BOOK.style.top = "";
-        EvidenceBoard.style.display = "block";
-        blacksheet.style.display = "none";
-        cord.style.display = "block";
-       EvidenceBoard.style.animation="none";
-       CaseDataArr[bookopenindex].DIV.style.animation="";
-       CaseDataArr[bookopenindex].DIV.classList.remove("cardclicked");
-      CaseDataArr[bookopenindex].DIV.style.position = "absolute";
-      CaseDataArr[bookopenindex].DIV.style.top = "";
-      CaseDataArr[bookopenindex].DIV.style.left = "";
-      CaseDataArr[bookopenindex].DIV.style.right = "";
-      dim.style.display = "none";
-       cardstate="notClicked";})
-       

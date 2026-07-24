@@ -134,8 +134,8 @@ font-family: "victorian";
 
 
 .caseimg{
-    width: 8rem;
-    height: 10.6rem;
+  width: clamp(6rem, 9vw, 8rem);
+  height: clamp(7rem, 21.2vh, 10.6rem);
     padding: 0.5rem 0.5rem 1.5rem 0.5rem;
     opacity: 0.8;
 
@@ -181,14 +181,7 @@ font-family: "victorian";
 .A_Study_in_Scarlet{ top: 78vh; left: 3.8vw; transform: rotate(3deg); transform-origin: 5% 5%;}
 .The_Valley_of_Fear{ top: 84.5vh; left: 33.6vw;}
 
-.notes{
-    width: 15rem;
-    height: 14rem;
 
-    opacity: 0.8;
-    filter: drop-shadow(6px 12px 5px rgba(50, 50, 50, 0.8));
- transition: transform 0.3s ease;
-}
 .notes:hover{
    transform: scale(1.1) ;
   
@@ -196,58 +189,58 @@ font-family: "victorian";
    
 }
 .pushpin{
-    width: 5rem;
-    height: 5rem;
+    width: clamp(1.7rem, 2.2vw, 2.1rem);
+    aspect-ratio: 1;
     position: fixed;
     z-index: 7;
     pointer-events: none;
     filter: drop-shadow(6px 12px 5px rgba(10, 10, 10, 0.8));
 }
 .pushpin1{
-    top: 11.3vh;
+    top: 12.3vh;
     left: 10vw;
     
     position: absolute;
     
 }
 .pushpin2{
-    top: 5.7vh;
-    left: 43.3vw;
+    top: 8vh;
+    left: 44.3vw;
     position: absolute;
 }
 .pushpin3{
-    top: 1.3vh;
-    left: 64.3vw;
+    top: 3vh;
+    left: 66.3vw;
     position: absolute;
 }
 .pushpin4{
-    top: 27.7vh;
-    right: 7vw;
+    top: 29vh;
+    right: 6.5vw;
     position: absolute;
 }
 .pushpin5{
-    top: 11.3vh;  right: -15vw;
+    top: 12.8vh;  right: -15vw;
     
     position: absolute;
 }
 .pushpin6{
-    top: 41.5vh; left: 27vw;
+    top: 43.5vh; left: 27vw;
     position: absolute;
 }
 .pushpin7{
-    top: 37.2vh; left: 53.6vw;
+    top: 39.2vh; left: 53.6vw;
     position: absolute;
 }
 .pushpin8{
-    top: 71.3vh; left: 79.2vw;
+    top: 73.3vh; left: 79.2vw;
     position: absolute;
 }
 .pushpin9{
-    top: 74vh; left: 3.8vw;
+    top: 77vh; left: 3.8vw;
     position: absolute;
 }
 .pushpin10{
-    top: 80.5vh; left: 37.6vw;
+    top: 82.5vh; left: 37.6vw;
     position: absolute;
 }
 .notesdiv{
@@ -263,22 +256,12 @@ font-family: "victorian";
     width: 6rem;
     height: 9rem;
 }
-.pushpin11{
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    position: absolute;
-     width: 5rem;
-    height: 5rem;
-    position: absolute;
-    z-index: 1;
-}
 .casename {
     position: absolute;
     bottom: -45px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 2vw, 1.55rem);
     color: #f5f0e1;
     white-space: nowrap;
     text-align: center;
@@ -313,7 +296,7 @@ font-family: "victorian";
 }
 @keyframes click {
   0% {
-    transform: scale(1.01);
+    transform: scale(1.0009);
   
 
   }
@@ -394,8 +377,6 @@ font-family: "victorian";
     text-align: justify;
     background-color: #f0e6d2;
      font-family: "IM Fell English", serif;
-     
-
     }
     .cord{
         position: fixed;
@@ -461,12 +442,28 @@ background: radial-gradient(
     left: 0;
     z-index: 1000001;
 }
-.circlehover{
-    fill: #6c0505;
+.ribbon{
+    position: fixed;
+    top: 0;
+    right: 0.5rem;
+    z-index: 1000001;
+    width: 3.6rem;
+    height: 7.7rem;
+    padding: 0;
+    margin: 0;
+    display: none;
 }
-.crosshover{
-    fill: #e8dcc8;
-    cursor: pointer;
+.pin{
+    position: fixed;
+    top: 0rem;
+    right: 0.9rem;
+    z-index: 1000002;
+    width: 2.3rem;
+    height: 4rem;
+    padding: 0;
+    margin: 0;
+display: none;
+filter:brightness(0.6)
 }
 .draw{
     animation: draw 2s linear 1 forwards;
@@ -606,4 +603,26 @@ background: radial-gradient(
   100% {
     opacity: 0;
   }
+}
+.ribbonfade{
+    animation: ribbonfade 0.5s linear 1 forwards;
+}
+@keyframes ribbonfade {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.pinfade{
+    animation: pinfade 0.5s linear 1 forwards;
+}
+@keyframes pinfade {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
