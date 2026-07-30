@@ -21,6 +21,7 @@ const svg = document.querySelector(".svgcanvas");
 
 
 
+
 //SECTION: intro screen.
 
 introtext[0].addEventListener("animationend", (e) => {
@@ -94,7 +95,7 @@ let CaseData= {
     "STORYPATH": CaseStoryPathArr[i],
     "PAGEFLIP": null,
     "BOOKMARK": pageno
-} 
+}    
 CaseDataArr.push(CaseData)
 }
 
@@ -113,7 +114,7 @@ let path= document.createElementNS("http://www.w3.org/2000/svg", "path");
 
 path.setAttribute("stroke", "rgb(128, 0, 0,1)");
 path.setAttribute("fill", "transparent");
-path.setAttribute("stroke-width", "3.6");
+path.setAttribute("stroke-width", "clamp(0.15rem, 0.22vw, 0.4rem)");
 patharr.push(path);
 svg.appendChild(path); 
 }
@@ -159,7 +160,7 @@ path.setAttribute("stroke-dashoffset", path.getTotalLength());
 patharr.forEach((path) => {path.addEventListener("animationend", (e) => {if (e.animationName === "draw") {path.classList.remove("draw"); path.style.strokeDasharray = "0"; path.style.strokeDashoffset = "0";}})})
 
    EvidenceBoard.addEventListener("scroll", drawThreads);
-   EvidenceBoard.addEventListener("resize", drawThreads);
+   window.addEventListener("resize", drawThreads);
 
 
 
@@ -265,34 +266,63 @@ CaseDataArr.forEach((card) => {
 
 async function bookCreate() {
  for (const card of CaseDataArr) {
-    try {const promise= await fetch(card.STORYPATH);
+    try {await document.fonts.ready;
+        const promise= await fetch(card.STORYPATH);
         if (!promise.ok) {throw new Error(`HTTP error! status: ${promise.status}`);}
     const response= await promise.text();
     card.STORYTEXT=(response.split(" "));
      addPages(card);
-     initializePageFlip(card);}
+     initializePageFlip(card);
+    }
      catch (error) {console.error(`Error fetching story for ${card.NAME}:`, error);
     }}}
      
 const addPages = (card) => {
     card.BOOK.innerHTML = "";
-    let length=0;
-    let pagestart=0;
-    card.STORYTEXT.forEach((word, index) => {length+=word.length;
-if (length>=1655) {
-    let page = document.createElement("div");
-    page.classList.add("page");
-    page.dataset.density = "soft";
-    page.textContent=card.STORYTEXT.slice(pagestart, index).join(" ");
-    card.BOOK.appendChild(page);
-    length=0;
-    pagestart=index;}})
-if (pagestart < card.STORYTEXT.length) {
-    let page = document.createElement("div");
-    page.classList.add("page");
-    page.dataset.density = "soft";
-    page.textContent = card.STORYTEXT.slice(pagestart).join(" ");
-    card.BOOK.appendChild(page);}
+let length = card.STORYTEXT.length;
+  let pageStartIndex = 0;
+    let totalLength = card.STORYTEXT.length;
+let measurePage = document.createElement("div");
+    measurePage.classList.add("page");
+    card.BOOK.appendChild(measurePage);
+  
+const compStyle = getComputedStyle(measurePage);
+    const availHeight = measurePage.clientHeight- parseFloat(compStyle.paddingTop)- parseFloat(compStyle.paddingBottom);
+   
+let textMeasure = document.createElement("div");
+    measurePage.appendChild(textMeasure);
+const fitsOnPage = (start, count) => {
+        textMeasure.textContent = card.STORYTEXT.slice(start, start + count).join(" ");
+        return textMeasure.offsetHeight <= availHeight;
+    };
+const pagesContent = [];
+    while (pageStartIndex < totalLength) {
+        
+let low = 1;
+ let high = totalLength - pageStartIndex;
+ let bestFit = 1;
+        while (low <= high) {
+            let mid = Math.floor((low + high) / 2);
+            if (fitsOnPage(pageStartIndex, mid)) {
+                bestFit = mid;
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+  pagesContent.push(card.STORYTEXT.slice(pageStartIndex, pageStartIndex + bestFit).join(" "));
+        pageStartIndex += bestFit;
+    }
+   
+    card.BOOK.removeChild(measurePage);
+
+    pagesContent.forEach((text) => {
+        let page = document.createElement("div");
+        page.classList.add("page");
+        page.dataset.density = "soft";
+        page.textContent = text;
+        card.BOOK.appendChild(page);
+    });
 let frontcover= document.createElement("div");
 frontcover.classList.add("cpage");
 frontcover.dataset.density = "hard";
@@ -308,25 +338,25 @@ let allpages = card.BOOK.querySelectorAll(".page, .cpage");
 if (allpages.length % 2 === 0) {  
     let frontblankpage = document.createElement("div");
     frontblankpage.classList.add("cpage");
-    frontblankpage.dataset.density = "hard";
+    frontblankpage.dataset.density = "soft";
     card.BOOK.insertBefore(frontblankpage, card.BOOK.children[1]);
     let backblankpage = document.createElement("div");
     backblankpage.classList.add("cpage");
-    backblankpage.dataset.density = "hard";
+    backblankpage.dataset.density = "soft";
     card.BOOK.insertBefore(backblankpage, card.BOOK.lastChild);
 }
 else {
     let frontblankpage = document.createElement("div");
     frontblankpage.classList.add("cpage");
-    frontblankpage.dataset.density = "hard";
+    frontblankpage.dataset.density = "soft";
     card.BOOK.insertBefore(frontblankpage, card.BOOK.children[1]);
     let backblankpage2 = document.createElement("div");
     backblankpage2.classList.add("cpage");
-    backblankpage2.dataset.density = "hard";
+    backblankpage2.dataset.density = "soft";
     card.BOOK.insertBefore(backblankpage2, card.BOOK.lastChild);
     let backblankpage = document.createElement("div");
     backblankpage.classList.add("cpage");
-    backblankpage.dataset.density = "hard";
+    backblankpage.dataset.density = "soft";
     card.BOOK.insertBefore(backblankpage, card.BOOK.children[card.BOOK.children.length-1]);
 
 }}
@@ -347,6 +377,7 @@ else if (card.BOOKMARK === 0) {ribbon.style.display = "none";}});
 }
 
 bookCreate();
+
 
 
 //SECTION: book opening functionality.

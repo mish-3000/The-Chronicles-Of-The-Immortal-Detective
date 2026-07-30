@@ -135,7 +135,7 @@ font-family: "victorian";
 
 .caseimg{
   width: clamp(6rem, 9vw, 8rem);
-  height: clamp(7rem, 21.2vh, 10.6rem);
+  height: clamp(9rem, 20.2vh, 10.6rem);
     padding: 0.5rem 0.5rem 1.5rem 0.5rem;
     opacity: 0.8;
 
@@ -304,7 +304,7 @@ font-family: "victorian";
     
     top: 40%;
     left: 50%;
-    transform: translate(-50%, -40%) scale(3) ;
+    transform: translate(-50%, -40%) scale(2.5);
     
   }
 }
@@ -344,15 +344,17 @@ font-family: "victorian";
     border: 1px solid #c8b89a;
     
     padding: 3.75em 4.375em;
-    line-height: 1.9;
-    letter-spacing: 0.02em;
-    font-size: 1em;
     text-align: justify;
     background-color: #f0e6d2;
-     font-family: "IM Fell English", serif;
-     
+    line-height: 1.9;
+    letter-spacing: 0.02em;
+    font-size: clamp(0.875em, 1.15vw, 1em);
+    text-align: justify;
+      font-family: "IM Fell English", serif;
+
     
 }
+
 
 .blacksheet{display: none; height: 100vh; width: 100vw; animation: fadeinblack 2s linear 1 forwards; background-color: rgba(0, 0, 0, 1); z-index: 990;}
 
@@ -383,8 +385,8 @@ font-family: "victorian";
         top: 0;
         right: 0;
         z-index: 1001;
-        width: 6rem;
-        height: 12rem;
+        width: 5rem;
+        height: 10rem;
         animation:pendulum 3s linear infinite;
         transform-origin: top center;
         display: none;
@@ -401,9 +403,9 @@ font-family: "victorian";
         animation: pullcord 0.7s linear 1 forwards;
     }
     @keyframes pullcord {
-       0%{width: 6rem; height: 12rem;}
-       50%{width: 6rem; height: 14rem;}
-         100%{width: 6rem; height: 12rem;}
+       0%{width: 5rem; height: 10rem;}
+       50%{width: 5rem; height: 12rem;}
+         100%{width: 5rem; height: 10rem;}
     }
 .night{
     position: fixed;
