@@ -40,13 +40,13 @@
 }
 
 .introtext2{
-    font-size: 4.6rem;
+    font-size: clamp(3rem, 5vw, 4.6rem);
     visibility: hidden; 
 }
 
 
 .introtext1{
-    font-size: 2.2rem; 
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
     animation: IntroFade 2.5s linear 1 forwards;
 }
 
@@ -177,7 +177,7 @@ font-family: "victorian";
 .The_Red_Headed_League{ top: 15.3vh;  transform: rotate(-4deg); right: -15vw; transform-origin: 60% 3%;}
 .The_Sign_of_the_Four{ top: 45.5vh; left: 23vw;}
 .The_Adventure_of_the_Six_Napoleons{ top: 41.2vh; left: 53.6vw; transform: rotate(5deg); transform-origin: 5% 5%;}
-.The_Adventure_of_the_Speckled_Band{ top: 75.3vh; left: 74.2vw; transform: rotate(-5deg); transform-origin: 55% 5%;}
+.The_Adventure_of_the_Speckled_Band{ top: 75.3vh; left: 96.2vw; transform: rotate(-5deg); transform-origin: 55% 5%;}
 .A_Study_in_Scarlet{ top: 78vh; left: 3.8vw; transform: rotate(3deg); transform-origin: 5% 5%;}
 .The_Valley_of_Fear{ top: 84.5vh; left: 33.6vw;}
 
@@ -232,7 +232,7 @@ font-family: "victorian";
     position: absolute;
 }
 .pushpin8{
-    top: 73.3vh; left: 79.2vw;
+    top: 73.3vh; left: 101.2vw;
     position: absolute;
 }
 .pushpin9{
@@ -606,25 +606,35 @@ filter:brightness(0.6)
     opacity: 0;
   }
 }
-.ribbonfade{
-    animation: ribbonfade 0.5s linear 1 forwards;
+
+
+
+.loadingtext{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #f5f0e1;
+    font-family: "victorian";
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    z-index: 995;
+    display: none;
+    animation: loadingpulse 1.5s ease-in-out infinite;
 }
-@keyframes ribbonfade {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+@keyframes loadingpulse {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
 }
-.pinfade{
-    animation: pinfade 0.5s linear 1 forwards;
+
+.threadglow{
+    animation: threadglow 0.9s linear 1 forwards;
 }
-@keyframes pinfade {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+@keyframes threadglow {
+    0% { filter: drop-shadow(0 0 0px rgba(198, 40, 40, 0)); }
+    50% { filter: drop-shadow(0 0 4px rgba(203, 127, 127, 1)); }
+    100% { filter: drop-shadow(0 0 0px rgba(198, 40, 40, 0)); }
 }
+ 

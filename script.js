@@ -16,7 +16,10 @@ const svg = document.querySelector(".svgcanvas");
  const ribbon = document.querySelector(".ribbon");
  const pin = document.querySelector(".pin");
  let bookopened=false;
-
+let loadingtext=document.createElement("p") 
+loadingtext.textContent="the case is loading..." 
+loadingtext.classList.add("loadingtext") 
+document.body.appendChild(loadingtext) 
 
 
 
@@ -94,7 +97,9 @@ let CaseData= {
     "STORYTEXT": CaseStoryTextArr[i],
     "STORYPATH": CaseStoryPathArr[i],
     "PAGEFLIP": null,
-    "BOOKMARK": pageno
+    "BOOKMARK": pageno,
+      "LOADED": false,
+    "buildPromise": null
 }    
 CaseDataArr.push(CaseData)
 }
@@ -136,10 +141,10 @@ if (points.length >= 10) {
     const pathdata =  [`M${pincentre[0].m} ${pincentre[0].n} Q${(points[0].x + points[1].x) / 2} ${ (points[0].y + points[1].y) / 2 + 70} ${pincentre[1].m} ${pincentre[1].n}`,
      `M${pincentre[0].m} ${pincentre[0].n} Q${(points[0].x + points[5].x) / 2} ${ (points[0].y + points[5].y) / 2 + 50} ${pincentre[5].m} ${pincentre[5].n}`,
    `M${pincentre[0].m} ${pincentre[0].n} Q${(points[0].x + points[8].x) / 2+70} ${ (points[0].y + points[8].y) / 2 + 70} ${pincentre[8].m} ${pincentre[8].n}`,
-     `M${pincentre[3].m} ${pincentre[3].n} Q${(points[3].x + points[7].x) / 2+70} ${ (points[3].y + points[7].y) / 2 + 50} ${pincentre[7].m} ${pincentre[7].n}`,
+     `M${pincentre[3].m} ${pincentre[3].n} Q${points[3].x+40} ${ (points[3].y + points[7].y) / 2 + 20} ${pincentre[7].m} ${pincentre[7].n}`,
      `M${pincentre[6].m} ${pincentre[6].n} Q${(points[6].x + points[3].x) / 2} ${ (points[6].y + points[3].y) / 2 + 50} ${pincentre[3].m} ${pincentre[3].n}`,
      `M${pincentre[6].m} ${pincentre[6].n} Q${(points[6].x + points[1].x) / 2} ${ (points[6].y + points[1].y) / 2 + 50} ${pincentre[1].m} ${pincentre[1].n}`,
-   `M${pincentre[7].m} ${pincentre[7].n} Q${(points[7].x + points[9].x) / 2} ${ (points[7].y + points[9].y) / 2 + 50} ${pincentre[9].m} ${pincentre[9].n}`,
+   `M${pincentre[7].m} ${pincentre[7].n} Q${(points[7].x + points[9].x) / 2} ${ points[9].y+80} ${pincentre[9].m} ${pincentre[9].n}`,
      `M${pincentre[4].m} ${pincentre[4].n} Q${(points[4].x + points[3].x) / 2} ${ (points[4].y + points[3].y) / 2 + 50} ${pincentre[3].m} ${pincentre[3].n}`,
      `M${pincentre[2].m} ${pincentre[2].n} Q${(points[2].x + points[4].x) / 2} ${ (points[2].y + points[4].y) / 2 + 50} ${pincentre[4].m} ${pincentre[4].n}` ]
 
@@ -157,7 +162,9 @@ path.setAttribute("stroke-dashoffset", path.getTotalLength());
 
     intro.addEventListener("animationend", (e) => {if (e.animationName === "introfadeout") { drawThreads(); setTimeout(() => {patharr.forEach((path) => {path.classList.add("draw"); })}, 500); }})
 
-patharr.forEach((path) => {path.addEventListener("animationend", (e) => {if (e.animationName === "draw") {path.classList.remove("draw"); path.style.strokeDasharray = "0"; path.style.strokeDashoffset = "0";}})})
+patharr.forEach((path) => {path.addEventListener("animationend", (e) => {if (e.animationName === "draw") {path.classList.remove("draw"); path.style.strokeDasharray = "0"; path.style.strokeDashoffset = "0"; path.classList.add("threadglow");}
+else if (e.animationName === "threadglow") {path.classList.remove("threadglow")}
+})})
 
    EvidenceBoard.addEventListener("scroll", drawThreads);
    window.addEventListener("resize", drawThreads);
@@ -231,6 +238,9 @@ card.DIV.addEventListener("click", () => {
         cord.style.display = "none";
         light.style.display = "none";
         bookopenindex=index;
+        card.buildPromise = buildBook(card);
+        loadingtext.style.display="block";
+        night.style.display = "none";
     dim.style.display = "none";}})
 
 
@@ -264,18 +274,24 @@ CaseDataArr.forEach((card) => {
 
 
 
-async function bookCreate() {
- for (const card of CaseDataArr) {
-    try {await document.fonts.ready;
-        const promise= await fetch(card.STORYPATH);
-        if (!promise.ok) {throw new Error(`HTTP error! status: ${promise.status}`);}
-    const response= await promise.text();
-    card.STORYTEXT=(response.split(" "));
-     addPages(card);
-     initializePageFlip(card);
+ 
+async function buildBook(card) {
+    if (card.LOADED) return;
+    try {
+        await document.fonts.ready;
+        const res = await fetch(card.STORYPATH);
+        if (!res.ok) { throw new Error(`HTTP error! status: ${res.status}`); }
+        const text = await res.text();
+        card.STORYTEXT = text.split(" ");
+        addPages(card);
+        initializePageFlip(card);
+        card.LOADED = true;
+    } catch (error) {
+        console.error(`Error fetching story for ${card.NAME}:`, error);
     }
-     catch (error) {console.error(`Error fetching story for ${card.NAME}:`, error);
-    }}}
+}
+
+
      
 const addPages = (card) => {
     card.BOOK.innerHTML = "";
@@ -362,7 +378,13 @@ else {
 }}
 
 
-const initializePageFlip = (card) => {card.PAGEFLIP = new St.PageFlip(card.BOOK, {
+const initializePageFlip = (card) => {
+    if (card.PAGEFLIP) {card.PAGEFLIP.destroy()} 
+card.FRONTCOVER.style.width=window.innerWidth*0.5 + 'px' 
+card.FRONTCOVER.style.height=window.innerHeight + 'px' 
+card.BACKCOVER.style.width=window.innerWidth*0.5 + 'px'
+card.BACKCOVER.style.height=window.innerHeight + 'px' 
+    card.PAGEFLIP = new St.PageFlip(card.BOOK, {
     showCover: true,
     width: window.innerWidth*0.5,
 height: window.innerHeight, 
@@ -370,20 +392,18 @@ size: "stretch",
 minHeight: window.innerHeight,
 });
 card.PAGEFLIP.loadFromHTML(card.BOOK.querySelectorAll(".page, .cpage"))
-card.PAGEFLIP.on("flip", (e) => {
-    card.BOOKMARK = e.data;
-if (card.BOOKMARK=== 1) {ribbon.style.display = "block";pin.style.display = "block";} 
-else if (card.BOOKMARK === 0) {ribbon.style.display = "none";}});
+
 }
 
-bookCreate();
 
 
 
 //SECTION: book opening functionality.
 
 
-blacksheet.addEventListener("animationend", (e) => {if(e.animationName === "fadeinblack") {
+blacksheet.addEventListener("animationend", async (e) => {if(e.animationName === "fadeinblack") {
+   await CaseDataArr[bookopenindex].buildPromise;
+    loadingtext.style.display="none";
     CaseDataArr[bookopenindex].BOOK.style.top = "0";
  blacksheet.style.opacity="0"; CaseDataArr[bookopenindex].BOOK.style.animation="fadeinblack 1s ease forwards"; bookopened=true; }})
 
