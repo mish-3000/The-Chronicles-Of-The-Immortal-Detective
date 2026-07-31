@@ -114,10 +114,10 @@ CaseDataArr.push(CaseData)
 
 
 const patharr = [];
-for (let i = 0; i < 9; i++) {
+for (let i = 0; i <=7; i++) {
 let path= document.createElementNS("http://www.w3.org/2000/svg", "path");
 
-path.setAttribute("stroke", "rgb(128, 0, 0,1)");
+path.setAttribute("stroke", "rgb(136, 8, 8,1)");
 path.setAttribute("fill", "transparent");
 path.setAttribute("stroke-width", "clamp(0.15rem, 0.22vw, 0.4rem)");
 patharr.push(path);

@@ -148,7 +148,7 @@ font-family: "victorian";
    -1px 1px 1.2px hsl(var(--shadow-color) / 1),
     -25px 25px 30.2px -4.3px hsl(var(--shadow-color) / 1);
    display: inline-block;
-   background-color: rgba(193, 185, 163, 1);
+   background-color: rgb(185, 173, 140);
   position: absolute;
   transition: transform 0.3s ease;
   z-index: 5;
@@ -338,14 +338,16 @@ font-family: "victorian";
 }
 .page{
    
-    
+    box-shadow:
+    inset 18px 0 25px -22px rgba(0, 0, 0, 0.6),
+    inset -18px 0 25px -22px rgba(0, 0, 0, 0.45);
     width: 50vw;
     height: 100vh !important;
     border: 1px solid #c8b89a;
     
     padding: 3.75em 4.375em;
     text-align: justify;
-    background-color: #f0e6d2;
+    background-color: #aa9f88;
     line-height: 1.9;
     letter-spacing: 0.02em;
     font-size: clamp(0.875em, 1.15vw, 1em);
@@ -368,7 +370,10 @@ font-family: "victorian";
 
 
 
-    .cpage{ width: 50vw;
+    .cpage{
+      box-shadow:
+    inset 18px 0 25px -22px rgba(0, 0, 0, 0.6),
+    inset -18px 0 25px -22px rgba(0, 0, 0, 0.45); width: 50vw;
     height: 100vh !important;
     border: 1px solid #c8b89a;
     
@@ -377,7 +382,7 @@ font-family: "victorian";
     letter-spacing: 0.02em;
     font-size: 1em;
     text-align: justify;
-    background-color: #f0e6d2;
+    background-color: #aa9f88;
      font-family: "IM Fell English", serif;
     }
     .cord{
@@ -413,7 +418,7 @@ font-family: "victorian";
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(30, 47, 147, 0.34);
+    background-color: rgba(40, 50, 106, 0.34);
     z-index: 10000;
     display: none;
     pointer-events: none;
@@ -634,11 +639,11 @@ filter:brightness(0.6)
 }
 
 .threadglow{
-    animation: threadglow 0.9s linear 1 forwards;
+    animation: threadglow 1.3s linear 1 forwards;
 }
 @keyframes threadglow {
     0% { filter: drop-shadow(0 0 0px rgba(198, 40, 40, 0)); }
-    50% { filter: drop-shadow(0 0 4px rgba(203, 127, 127, 1)); }
+    20% { filter: drop-shadow(0 0 5px rgba(203, 127, 127, 1)); }
     100% { filter: drop-shadow(0 0 0px rgba(198, 40, 40, 0)); }
 }
  
