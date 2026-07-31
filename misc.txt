@@ -1,0 +1,53 @@
+font-family: "Cinzel", serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+
+
+
+
+
+
+font-family: "IM Fell English", serif;
+  font-weight: 400;
+  font-style: italic;
+
+
+
+
+  3 hb
+  7 sp band
+  0 scandal
+  empty house 1
+  5 sign of four
+  8 study
+  6 napolean
+  2 fp
+9 vf
+4 rl
+
+
+
+193, 185, 163, 1
+
+
+
+
+page.textContent=emptyhousetext.slice(0,ind )
+
+
+
+
+
+
+
+
+
+
+
+
+
+zoom threa
+resize thread
+zoom block
+req animation problem

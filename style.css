@@ -176,7 +176,7 @@ font-family: "victorian";
 .The_Hound_of_the_Baskervilles{ top: 30.7vh; right: 5vw; transform: rotate(5deg); transform-origin: 20% 5%;}
 .The_Red_Headed_League{ top: 15.3vh;  transform: rotate(-4deg); right: -15vw; transform-origin: 60% 3%;}
 .The_Sign_of_the_Four{ top: 45.5vh; left: 23vw;}
-.The_Adventure_of_the_Six_Napoleons{ top: 41.2vh; left: 53.6vw; transform: rotate(5deg); transform-origin: 5% 5%;}
+.The_Adventure_of_the_Six_Napoleons{ top: 51.2vh; left: 57.6vw; transform: rotate(5deg); transform-origin: 5% 5%;}
 .The_Adventure_of_the_Speckled_Band{ top: 75.3vh; left: 96.2vw; transform: rotate(-5deg); transform-origin: 55% 5%;}
 .A_Study_in_Scarlet{ top: 78vh; left: 3.8vw; transform: rotate(3deg); transform-origin: 5% 5%;}
 .The_Valley_of_Fear{ top: 84.5vh; left: 33.6vw;}
@@ -228,7 +228,7 @@ font-family: "victorian";
     position: absolute;
 }
 .pushpin7{
-    top: 39.2vh; left: 53.6vw;
+    top: 50vh; left: 58.6vw;
     position: absolute;
 }
 .pushpin8{
@@ -441,8 +441,12 @@ background: radial-gradient(
     display: none;
      position: fixed;
      top: 0;
-    left: 0;
+    right: 0;
     z-index: 1000001;
+    cursor: pointer;
+}
+.exit:hover .circle {
+    fill: #6c0505;
 }
 .ribbon{
     position: fixed;

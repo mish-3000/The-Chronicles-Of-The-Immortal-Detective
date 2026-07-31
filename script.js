@@ -141,11 +141,10 @@ if (points.length >= 10) {
     const pathdata =  [`M${pincentre[0].m} ${pincentre[0].n} Q${(points[0].x + points[1].x) / 2} ${ (points[0].y + points[1].y) / 2 + 70} ${pincentre[1].m} ${pincentre[1].n}`,
      `M${pincentre[0].m} ${pincentre[0].n} Q${(points[0].x + points[5].x) / 2} ${ (points[0].y + points[5].y) / 2 + 50} ${pincentre[5].m} ${pincentre[5].n}`,
    `M${pincentre[0].m} ${pincentre[0].n} Q${(points[0].x + points[8].x) / 2+70} ${ (points[0].y + points[8].y) / 2 + 70} ${pincentre[8].m} ${pincentre[8].n}`,
-     `M${pincentre[3].m} ${pincentre[3].n} Q${points[3].x+40} ${ (points[3].y + points[7].y) / 2 + 20} ${pincentre[7].m} ${pincentre[7].n}`,
+     `M${pincentre[4].m} ${pincentre[4].n} Q${points[4].x} ${ (points[4].y + points[7].y) / 2 } ${pincentre[7].m} ${pincentre[7].n}`,
      `M${pincentre[6].m} ${pincentre[6].n} Q${(points[6].x + points[3].x) / 2} ${ (points[6].y + points[3].y) / 2 + 50} ${pincentre[3].m} ${pincentre[3].n}`,
      `M${pincentre[6].m} ${pincentre[6].n} Q${(points[6].x + points[1].x) / 2} ${ (points[6].y + points[1].y) / 2 + 50} ${pincentre[1].m} ${pincentre[1].n}`,
    `M${pincentre[7].m} ${pincentre[7].n} Q${(points[7].x + points[9].x) / 2} ${ points[9].y+80} ${pincentre[9].m} ${pincentre[9].n}`,
-     `M${pincentre[4].m} ${pincentre[4].n} Q${(points[4].x + points[3].x) / 2} ${ (points[4].y + points[3].y) / 2 + 50} ${pincentre[3].m} ${pincentre[3].n}`,
      `M${pincentre[2].m} ${pincentre[2].n} Q${(points[2].x + points[4].x) / 2} ${ (points[2].y + points[4].y) / 2 + 50} ${pincentre[4].m} ${pincentre[4].n}` ]
 
 
@@ -404,6 +403,7 @@ card.PAGEFLIP.loadFromHTML(card.BOOK.querySelectorAll(".page, .cpage"))
 blacksheet.addEventListener("animationend", async (e) => {if(e.animationName === "fadeinblack") {
    await CaseDataArr[bookopenindex].buildPromise;
     loadingtext.style.display="none";
+    exit.style.display="block";
     CaseDataArr[bookopenindex].BOOK.style.top = "0";
  blacksheet.style.opacity="0"; CaseDataArr[bookopenindex].BOOK.style.animation="fadeinblack 1s ease forwards"; bookopened=true; }})
 
@@ -445,5 +445,44 @@ light.addEventListener("animationend", (e) => {
     
 
 
-//SECTION - bookmark functionality.
+//SECTION - exit functionality.
 
+exit.addEventListener("click", () => {
+    const currentCase = CaseDataArr[bookopenindex];
+
+    currentCase.BOOK.style.top = "-9999px";
+    currentCase.BOOK.style.animation = "";
+
+    EvidenceBoard.style.display = "block";
+    EvidenceBoard.style.visibility = "visible";
+
+    cord.style.display = "block";
+
+    if (lightstate === "on") {
+        light.style.display = "block";
+        night.style.display = "none";
+    } else {
+        light.style.display = "none";
+        night.style.display = "block";
+    }
+
+    currentCase.DIV.classList.remove("cardclicked", "scaledhover");
+    currentCase.DIV.style.position = "absolute";
+    currentCase.DIV.style.top = "";
+    currentCase.DIV.style.left = "";
+    currentCase.DIV.style.right = "";
+
+    EvidenceBoard.appendChild(currentCase.DIV);
+
+    dim.style.display = "none";
+    blacksheet.style.display = "none";
+    blacksheet.style.opacity = "";
+
+    exit.style.display = "none";
+    loadingtext.style.display = "none";
+
+    bookopened = false;
+    bookopenindex = null;
+    cardstate = "notClicked";
+
+});
