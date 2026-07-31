@@ -135,7 +135,7 @@ font-family: "victorian";
 
 .caseimg{
   width: clamp(6rem, 9vw, 8rem);
-  height: clamp(9rem, 20.2vh, 10.6rem);
+  height: clamp(9rem, 21.2vh, 10.6rem);
     padding: 0.5rem 0.5rem 1.5rem 0.5rem;
     opacity: 0.8;
 
