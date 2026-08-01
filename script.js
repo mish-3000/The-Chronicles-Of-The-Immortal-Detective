@@ -10,13 +10,25 @@ const exit = document.querySelector(".exit");
  const cord = document.querySelector(".cord");
  const light = document.querySelector(".light");
 const svg = document.querySelector(".svgcanvas");
- let lightstate="off";
- let bookopenindex=null;
- let cardstate="notClicked";
  const ribbon = document.querySelector(".ribbon");
  const pin = document.querySelector(".pin");
- let bookopened=false;
 let loadingtext=document.createElement("p") 
+
+
+
+
+
+
+//SECTION: states.
+let lightstate="off";
+ let bookopenindex=null;
+ let cardstate="notClicked";
+let bookopened=false;
+
+
+
+
+//SECTION: loading screen.
 loadingtext.textContent="the case is loading..." 
 loadingtext.classList.add("loadingtext") 
 document.body.appendChild(loadingtext) 
@@ -404,6 +416,8 @@ CaseDataArr.forEach((card) => {card.LOADED=false})
 }, 300)
 })
 
+
+
 //SECTION: book opening functionality.
 
 
@@ -494,3 +508,6 @@ exit.addEventListener("click", () => {
     cardstate = "notClicked";
 
 });
+
+
+
