@@ -125,6 +125,7 @@ svg.appendChild(path);
 }
 
 const drawThreads = () => {
+    if (EvidenceBoard.style.display === "none") {return}
 const points = [];
 const pincentre=[];
 CaseDataArr.forEach((caseData) => {
@@ -271,9 +272,6 @@ CaseDataArr.forEach((card) => {
 //SECTION: book creation and pageflip initialization.
 
 
-
-
- 
 async function buildBook(card) {
     if (card.LOADED) return;
     try {
@@ -282,6 +280,7 @@ async function buildBook(card) {
         if (!res.ok) { throw new Error(`HTTP error! status: ${res.status}`); }
         const text = await res.text();
         card.STORYTEXT = text.split(" ");
+        if (card.PAGEFLIP) { card.PAGEFLIP.destroy(); card.PAGEFLIP = null; }
         addPages(card);
         initializePageFlip(card);
         card.LOADED = true;
@@ -289,6 +288,7 @@ async function buildBook(card) {
         console.error(`Error fetching story for ${card.NAME}:`, error);
     }
 }
+
 
 
      
@@ -378,11 +378,10 @@ else {
 
 
 const initializePageFlip = (card) => {
-    if (card.PAGEFLIP) {card.PAGEFLIP.destroy()} 
-card.FRONTCOVER.style.width=window.innerWidth*0.5 + 'px' 
-card.FRONTCOVER.style.height=window.innerHeight + 'px' 
+card.FRONTCOVER.style.width=window.innerWidth*0.5 + 'px'
+card.FRONTCOVER.style.height=window.innerHeight + 'px'
 card.BACKCOVER.style.width=window.innerWidth*0.5 + 'px'
-card.BACKCOVER.style.height=window.innerHeight + 'px' 
+card.BACKCOVER.style.height=window.innerHeight + 'px'
     card.PAGEFLIP = new St.PageFlip(card.BOOK, {
     showCover: true,
     width: window.innerWidth*0.5,
@@ -391,11 +390,19 @@ size: "stretch",
 minHeight: window.innerHeight,
 });
 card.PAGEFLIP.loadFromHTML(card.BOOK.querySelectorAll(".page, .cpage"))
-
 }
 
 
 
+
+//SECTION - resize handling.
+let resizetimer
+window.addEventListener("resize", () => {
+clearTimeout(resizetimer)
+resizetimer=setTimeout(() => {
+CaseDataArr.forEach((card) => {card.LOADED=false})
+}, 300)
+})
 
 //SECTION: book opening functionality.
 
@@ -455,6 +462,7 @@ exit.addEventListener("click", () => {
 
     EvidenceBoard.style.display = "block";
     EvidenceBoard.style.visibility = "visible";
+    drawThreads();
 
     cord.style.display = "block";
 
