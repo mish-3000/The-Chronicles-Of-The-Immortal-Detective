@@ -457,6 +457,7 @@ light.addEventListener("animationend", (e) => {
 //SECTION - exit functionality.
 
 exit.addEventListener("click", () => {
+    
     const currentCase = CaseDataArr[bookopenindex];
 
     currentCase.BOOK.style.top = "-9999px";
