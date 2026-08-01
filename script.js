@@ -406,18 +406,6 @@ card.PAGEFLIP.loadFromHTML(card.BOOK.querySelectorAll(".page, .cpage"))
 
 
 
-
-//SECTION - resize handling.
-let resizetimer
-window.addEventListener("resize", () => {
-clearTimeout(resizetimer)
-resizetimer=setTimeout(() => {
-CaseDataArr.forEach((card) => {card.LOADED=false})
-}, 300)
-})
-
-
-
 //SECTION: book opening functionality.
 
 
